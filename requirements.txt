@@ -5,3 +5,4 @@ netdiff>=0.6.0,<0.7
 openwisp-utils>=0.2,<0.3
 jsonfield
 six
+netjson-robustness==0.1.1
