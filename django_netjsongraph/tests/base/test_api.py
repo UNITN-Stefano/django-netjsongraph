@@ -1,5 +1,5 @@
 from ..utils import LoadMixin, UnpublishMixin
-
+import datetime
 
 class TestApiMixin(UnpublishMixin, LoadMixin):
     list_url = '/api/topology/'
@@ -17,7 +17,9 @@ class TestApiMixin(UnpublishMixin, LoadMixin):
     @property
     def snapshot_url(self):
         t = self.topology_model.objects.first()
-        return '/api/topology/{0}/history/?date={1}'.format(t.pk, self.snapshot_date)
+        now = datetime.datetime.now()
+        date = str(now.year)+'-'+str(now.month)+'-'+str(now.day)
+        return '/api/topology/{0}/history/?date={1}'.format(t.pk, date)
 
     def _set_receive(self):
         t = self.topology_model.objects.first()
@@ -107,27 +109,31 @@ class TestApiMixin(UnpublishMixin, LoadMixin):
         self._set_receive()
         response = self.client.options(self.receive_url)
         self.assertEqual(response.data['parses'], ['text/plain'])
-
+    
     def test_snapshot(self):
+        self.topology_model.save_snapshot_all('testnetwork')
         response = self.client.get(self.snapshot_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['type'], 'NetworkGraph')
 
     def test_snapshot_missing_date_400(self):
-        date = self.snapshot_date
+        now = datetime.datetime.now()
+        date = str(now.year)+'-'+str(now.month)+'-'+str(now.day)
         response = self.client.get(self.snapshot_url.replace('?date={0}'.format(date), ''))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data['detail'], 'missing required "date" parameter')
 
     def test_snapshot_invalid_date_403(self):
-        date = self.snapshot_date
+        now = datetime.datetime.now()
+        date = str(now.year)+'-'+str(now.month)+'-'+str(now.day)
         url = self.snapshot_url.replace('?date={0}'.format(date), '?date=wrong-date')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.data['detail'], 'invalid date supplied')
 
     def test_snapshot_no_snapshot_404(self):
-        date = self.snapshot_date
+        now = datetime.datetime.now()
+        date = str(now.year)+'-'+str(now.month)+'-'+str(now.day)
         url = self.snapshot_url.replace('?date={0}'.format(date), '?date=2001-01-01')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)

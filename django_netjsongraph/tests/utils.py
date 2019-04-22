@@ -256,7 +256,7 @@ class TestUtilsMixin(LoadMixin):
         self.assertEqual(self.snapshot_model.objects.count(), 1)
         self._create_topology(**kwargs)
         self.topology_model.save_snapshot_all()
-        self.assertEqual(self.snapshot_model.objects.count(), 2)
+        self.assertEqual(self.snapshot_model.objects.count(), 3)
 
     def test_save_snapshot_command(self):
         self.assertEqual(self.snapshot_model.objects.count(), 0)
