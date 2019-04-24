@@ -253,14 +253,14 @@ class TestUtilsMixin(LoadMixin):
     def test_save_snapshot_all_method(self, **kwargs):
         self.assertEqual(self.snapshot_model.objects.count(), 0)
         self.topology_model.save_snapshot_all('testnetwork')
-        self.assertEqual(self.snapshot_model.objects.count(), 1)
+        self.assertEqual(self.snapshot_model.objects.count(), 2)
         self._create_topology(**kwargs)
         self.topology_model.save_snapshot_all()
-        self.assertEqual(self.snapshot_model.objects.count(), 3)
+        self.assertEqual(self.snapshot_model.objects.count(), 4)
 
     def test_save_snapshot_command(self):
         self.assertEqual(self.snapshot_model.objects.count(), 0)
         output = StringIO()
         with redirect_stdout(output):
             call_command('save_snapshot')
-        self.assertEqual(self.snapshot_model.objects.count(), 1)
+        self.assertEqual(self.snapshot_model.objects.count(), 2)

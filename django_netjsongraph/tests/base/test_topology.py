@@ -382,11 +382,11 @@ class TestTopologyMixin(LoadMixin):
 
     def test_save_snapshot(self):
         t = self._set_receive()
-        t.save_snapshot_all()
+        t.save_snapshot()
         s = t.snapshot_set.model.objects.first()
         self.assertEqual(s.data, t.json())
         self.assertEqual(s.topology, t)
-        t.save_snapshot_all()
+        t.save_snapshot()
         s = t.snapshot_set.model.objects.first()
         self.assertFalse(s.created == s.modified)
 
