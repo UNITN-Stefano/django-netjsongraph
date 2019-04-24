@@ -1,5 +1,6 @@
-from ..utils import LoadMixin, UnpublishMixin
 import datetime
+from ..utils import LoadMixin, UnpublishMixin
+
 
 class TestApiMixin(UnpublishMixin, LoadMixin):
     list_url = '/api/topology/'
@@ -109,7 +110,7 @@ class TestApiMixin(UnpublishMixin, LoadMixin):
         self._set_receive()
         response = self.client.options(self.receive_url)
         self.assertEqual(response.data['parses'], ['text/plain'])
-    
+
     def test_snapshot(self):
         self.topology_model.save_snapshot_all('testnetwork')
         response = self.client.get(self.snapshot_url)

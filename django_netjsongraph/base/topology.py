@@ -32,6 +32,7 @@ SNAPSHOT_KINDS = (
     ('block_cut_tree', _('BLOCK_CUT_TREE'))
 )
 
+
 @python_2_unicode_compatible
 class AbstractTopology(TimeStampedEditableModel):
     label = models.CharField(_('label'), max_length=64)
@@ -305,7 +306,7 @@ class AbstractTopology(TimeStampedEditableModel):
         # if using fetch strategy or
         # using receive strategy and link is coming back up or
         # receive strategy and ``expiration_time is 0``
-        elif self.strategy == 'fetch' or status == 'up' or self.expiration_time is 0:
+        elif self.strategy == 'fetch' or status == 'up' or self.expiration_time == 0:
             return True
         # if using receive strategy and expiration_time of link has expired
         elif link.modified < (now() - timedelta(seconds=self.expiration_time)):
