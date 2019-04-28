@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from ..models import Node, Snapshot, Topology
 from . import CreateGraphObjectsMixin
+from ..models import Node, Snapshot, Topology
 from .base.test_visualizer import TestVisualizerMixin
 
 

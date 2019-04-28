@@ -1,5 +1,5 @@
-from ...models import Topology
 from . import BaseUpdateCommand
+from ...models import Topology
 
 
 class Command(BaseUpdateCommand):

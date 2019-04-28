@@ -11,9 +11,9 @@ from django.utils.module_loading import import_string
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from netdiff import NetJsonParser, diff
+from rest_framework.utils.encoders import JSONEncoder
 from netdiff.utils import _netjson_networkgraph as to_netjson
 from netjson_robustness.analyser import ParsedGraph
-from rest_framework.utils.encoders import JSONEncoder
 
 from ..contextmanagers import log_failure
 from ..settings import PARSERS, TIMEOUT

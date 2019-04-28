@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from ..models import Snapshot, Topology
 from . import CreateGraphObjectsMixin
+from ..models import Snapshot, Topology
 from .base.test_snapshot import TestSnapshotMixin
 
 
