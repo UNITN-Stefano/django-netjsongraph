@@ -26,7 +26,6 @@ class Migration(migrations.Migration):
                 ('data', models.TextField()),
                 ('date', models.DateField(auto_now=True)),
                 ('topology', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='django_netjsongraph.Topology')),
-                ('kind', models.TextField()),
             ],
             options={
                 'abstract': False,
