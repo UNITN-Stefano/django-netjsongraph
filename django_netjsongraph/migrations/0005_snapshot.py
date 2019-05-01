@@ -26,7 +26,6 @@ class Migration(migrations.Migration):
                 ('data', models.TextField()),
                 ('date', models.DateField(auto_now=True)),
                 ('topology', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='django_netjsongraph.Topology')),
-                ('kind', models.CharField(choices=[(b'normal', 'NORMAL'), (b'block_cut_tree', 'BLOCK_CUT_TREE')], db_index=True, default=(b'normal', 'NORMAL'), max_length=16, verbose_name='kind')),
             ],
             options={
                 'abstract': False,
