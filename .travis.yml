@@ -29,9 +29,7 @@ install:
   - python setup.py -q develop
 
 script:
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then ./tests/manage.py makemigrations django_netjsongraph --dry-run; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then ./tests/manage.py migrate; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then ./tests/manage.py makemigrations django_netjsongraph --dry-run; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then ./tests/manage.py makemigrations django_netjsongraph --dry-run --verbose; fi
 
 after_success:
   coveralls
