@@ -1,7 +1,14 @@
 {% load i18n %}
 <div id="legend">
-    <p><span class="link up">&nbsp;</span> {% trans 'link up' %}</p>
-    <p><span class="link down">&nbsp;</span> {% trans 'link down' %}</p>
+    <p><span class="link up">&nbsp;</span> {% trans 'link status up' %}</p>
+    <p><span class="link down">&nbsp;</span> {% trans 'link status down' %}</p>
+    <p><span class="circle node">&nbsp;</span> ordinary node</p>
+    <p><span class="circle gateway">&nbsp;</span> gateway node</p>
+    <p><span class="link wireless">&nbsp;</span> wireless link</p>
+    <p><span class="link wireless_weak">&nbsp;</span> weak wireless link</p>
+    <p><span class="link ethernet">&nbsp;</span> ethernet link</p>
+    <p><span class="link fiber">&nbsp;</span> fiber link</p>
+    <p><span class="link vpn">&nbsp;</span> vpn link</p>
 </div>
 <div class="njg-switcher">
     <form id="v_kind">

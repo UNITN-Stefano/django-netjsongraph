@@ -100,6 +100,8 @@
          * @param  {function}   prepareData                     Used to convert NetJSON NetworkGraph to the javascript data
          * @param  {function}   onClickNode                     Called when a node is clicked
          * @param  {function}   onClickLink                     Called when a link is clicked
+         * @param  {function}   onOverLink                      Called when the mouse is over the link
+         * @param  {function}   onOverLinkOut                   Called when the mouse is out of the link
          */
         opts = d3._extend({
             el: "body",
@@ -246,14 +248,16 @@
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
                     html = "<p><b>source</b>: " + (l.source.label || l.source.id) + "</p>";
-                    html += "<p><b>target</b>: " + (l.target.label || l.target.id) + "</p>";
-                    html += "<p><b>cost</b>: " + l.cost + "</p>";
-                    // calculate difference in seconds between now and status_changed
-                    diff = (new Date() - new Date(l.properties.status_changed)) / 1000
+                html += "<p><b>target</b>: " + (l.target.label || l.target.id) + "</p>";
+                html += "<p><b>cost</b>: " + l.cost + "</p>";
+                // calculate difference in seconds between now and status_changed
+                if (l.properties && l.properties.hasOwnProperty("status_changed")) {
+                    diff = (new Date() - new Date(l.properties.status_changed)) / 1000;
                     var days = Math.floor(diff / 86400);
                     var hours = Math.floor(diff / 3600) % 24;
                     var minutes = Math.floor(diff / 60) % 60;
                     l.properties.status_changed = days+" Days "+hours+" Hours "+minutes+" Minutes"
+                }
                 if(l.properties) {
                     for(var key in l.properties) {
                         if(!l.properties.hasOwnProperty(key)) { continue; }
@@ -266,6 +270,50 @@
                 // set "open" class to current link
                 removeOpenClass();
                 d3.select(this).classed("njg-open", true);
+            },
+            /**
+             * @function
+             * @name onOverLink
+             *
+             * Called when the mouse is over the link
+             */
+            onOverLink: function(l) {
+                typeColor = "";
+                if (l.properties && l.properties.hasOwnProperty("status"))
+                    typeColor = (l.properties.status == "up") ? "green" : "red";
+                if (typeColor != "")
+                    d3.select(this).classed("njg-open", true).style('stroke', typeColor);
+                else
+                    d3.select(this).classed("njg-open", true);
+            },
+            /**
+             * @function
+             * @name onOverLinkOut
+             *
+             * Called when the mouse is out of the link
+             */
+            onOverLinkOut: function(l) {
+                typeColor = "";
+                if (l.properties && l.properties.hasOwnProperty("type")) {
+                    if (l.properties.type == "ethernet")
+                        typeColor = "#0481db";
+                    else if (l.properties.type == "wireless")
+                        typeColor = "#e1e2e2";
+                    else if (l.properties.type == "wireless_weak")
+                        typeColor = "#666666";
+                    else if (l.properties.type == "fiber")
+                        typeColor = "#001aff";
+                    else if (l.properties.type == "vpn")
+                        typeColor = "#ff00c8";
+                    else
+                        typeColor = "#666666";
+                }
+                else
+                    typeColor = "#666666";
+                if (typeColor != "")
+                    d3.select(this).classed("njg-open", false).style('stroke', typeColor).style('stroke-opacity','0.7');
+                else
+                    d3.select(this).classed("njg-open", false).style('stroke-opacity','0.7');
             }
         }, opts);
 
@@ -383,8 +431,9 @@
                                  .enter().append("line")
                                  .attr("class", function (link) {
                                      var baseClass = "njg-link",
-                                         addClass = null;
-                                         value = link.properties && link.properties[opts.linkClassProperty];
+                                         addClass = null,
+                                         value = link.properties && link.properties[opts.linkClassProperty],
+                                         typeClass = (link.properties && link.properties.hasOwnProperty("type")) ? link.properties["type"] : "";
                                      if (opts.linkClassProperty && value) {
                                          // if value is stirng use that as class
                                          if (typeof(value) === "string") {
@@ -396,11 +445,13 @@
                                          else if (value === true) {
                                              addClass = opts.linkClassProperty;
                                          }
-                                         return baseClass + " " + addClass;
+                                         return baseClass + " " + addClass + " " + typeClass;
                                      }
-                                     return baseClass;
+                                     return baseClass + " " + typeClass;
                                  })
-                                 .on("click", opts.onClickLink),
+                                 .on("click", opts.onClickLink)
+                                 .on("mouseover", opts.onOverLink)
+                                 .on("mouseout", opts.onOverLinkOut),
                     groups = panner.selectAll(".node")
                                    .data(nodes)
                                    .enter()
@@ -408,8 +459,16 @@
                     node = groups.append("circle")
                                  .attr("class", function (node) {
                                      var baseClass = "njg-node",
-                                         addClass = null;
-                                         value = node.properties && node.properties[opts.nodeClassProperty];
+                                         addClass = null,
+                                         value = node.properties && node.properties[opts.nodeClassProperty],
+                                         typeClass = "";
+                                     if (node.properties) {
+                                        if (node.properties.hasOwnProperty("style"))
+                                            typeClass = node.properties["style"];
+                                        else if (node.properties.hasOwnProperty("gateway"))
+                                            typeClass = node.properties["gateway"] ? "gateway" : "";
+                                     }
+                                         
                                      if (opts.nodeClassProperty && value) {
                                          // if value is stirng use that as class
                                          if (typeof(value) === "string") {
@@ -421,9 +480,9 @@
                                          else if (value === true) {
                                              addClass = opts.nodeClassProperty;
                                          }
-                                         return baseClass + " " + addClass;
+                                         return baseClass + " " + addClass + " " + typeClass;
                                      }
-                                     return baseClass;
+                                     return baseClass + " " + typeClass;
                                  })
                                  .attr("r", opts.circleRadius)
                                  .on("click", opts.onClickNode)
