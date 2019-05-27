@@ -224,7 +224,15 @@
                     if(n.properties) {
                         for(var key in n.properties) {
                             if(!n.properties.hasOwnProperty(key)) { continue; }
-                            html += "<p><b>"+key.replace(/_/g, " ")+"</b>: " + n.properties[key] + "</p>";
+                            if (key == "properties") {
+                                html += "<p><b>" + key.replace(/_/g, " ") + ": {</b></p>";
+                                for(var pr in n.properties[key]) {
+                                    html += "<p><b> &nbsp; &nbsp; &nbsp; "+pr.replace(/_/g, " ")+"</b>: " + n.properties[key][pr] + "</p>";
+                                }
+                                html += "<p><b>}</b></p>";
+                            }
+                            if (key != "properties")
+                                html += "<p><b>"+key.replace(/_/g, " ")+"</b>: " + n.properties[key] + "</p>";
                     }
                 }
                 if(n.linkCount) { html += "<p><b>links</b>: " + n.linkCount + "</p>"; }
@@ -467,6 +475,9 @@
                                             typeClass = node.properties["style"];
                                         else if (node.properties.hasOwnProperty("gateway"))
                                             typeClass = node.properties["gateway"] ? "gateway" : "";
+                                        else if (node.properties.hasOwnProperty("properties"))
+                                            if (node.properties["properties"].hasOwnProperty("gateway"))
+                                                typeClass = node.properties["properties"]["gateway"] ? "gateway" : "";
                                      }
                                          
                                      if (opts.nodeClassProperty && value) {
