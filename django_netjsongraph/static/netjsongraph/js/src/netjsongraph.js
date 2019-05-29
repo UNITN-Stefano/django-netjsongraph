@@ -220,19 +220,19 @@
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
                     html = "<p><b>id</b>: " + n.id + "</p>";
-                    if(n.label) { html += "<p><b>label</b>: " + n.label + "</p>"; }
-                    if(n.properties) {
-                        for(var key in n.properties) {
-                            if(!n.properties.hasOwnProperty(key)) { continue; }
-                            if (key == "properties") {
-                                html += "<p><b>" + key.replace(/_/g, " ") + ": {</b></p>";
-                                for(var pr in n.properties[key]) {
-                                    html += "<p><b> &nbsp; &nbsp; &nbsp; "+pr.replace(/_/g, " ")+"</b>: " + n.properties[key][pr] + "</p>";
-                                }
-                                html += "<p><b>}</b></p>";
+                if(n.label) { html += "<p><b>label</b>: " + n.label + "</p>"; }
+                if(n.properties) {
+                    for(var key in n.properties) {
+                        if(!n.properties.hasOwnProperty(key)) { continue; }
+                        if (key == "properties") {
+                            html += "<p><b>" + key.replace(/_/g, " ") + ": {</b></p>";
+                            for(var pr in n.properties[key]) {
+                                html += "<p><b> &nbsp; &nbsp; &nbsp; "+pr.replace(/_/g, " ")+"</b>: " + n.properties[key][pr] + "</p>";
                             }
-                            if (key != "properties")
-                                html += "<p><b>"+key.replace(/_/g, " ")+"</b>: " + n.properties[key] + "</p>";
+                            html += "<p><b>}</b></p>";
+                        }
+                        if (key != "properties")
+                            html += "<p><b>"+key.replace(/_/g, " ")+"</b>: " + n.properties[key] + "</p>";
                     }
                 }
                 if(n.linkCount) { html += "<p><b>links</b>: " + n.linkCount + "</p>"; }
@@ -269,7 +269,15 @@
                 if(l.properties) {
                     for(var key in l.properties) {
                         if(!l.properties.hasOwnProperty(key)) { continue; }
-                        html += "<p><b>"+ key.replace(/_/g, " ") +"</b>: " + l.properties[key] + "</p>";
+                        if (key == "properties") {
+                            html += "<p><b>" + key.replace(/_/g, " ") + ": {</b></p>";
+                            for(var pr in l.properties[key]) {
+                                html += "<p><b> &nbsp; &nbsp; &nbsp; "+pr.replace(/_/g, " ")+"</b>: " + l.properties[key][pr] + "</p>";
+                            }
+                            html += "<p><b>}</b></p>";
+                        }
+                        if (key != "properties")
+                            html += "<p><b>"+key.replace(/_/g, " ")+"</b>: " + l.properties[key] + "</p>";
                     }
                 }
                 overlayInner.html(html);
@@ -302,16 +310,21 @@
              */
             onOverLinkOut: function(l) {
                 typeColor = "";
-                if (l.properties && l.properties.hasOwnProperty("type")) {
-                    if (l.properties.type == "ethernet")
+                colType = "";
+                if (l.properties && l.properties.hasOwnProperty("type"))//-----
+                    colType = l.properties.type;//----
+                if (l.properties && l.properties.hasOwnProperty("properties") && l.properties["properties"].hasOwnProperty("type"))
+                    colType = l.properties["properties"]["type"];
+                if (colType != "") {
+                    if (colType == "ethernet")
                         typeColor = "#0481db";
-                    else if (l.properties.type == "wireless")
+                    else if (colType == "wireless")
                         typeColor = "#e1e2e2";
-                    else if (l.properties.type == "wireless_weak")
+                    else if (colType == "wireless_weak")
                         typeColor = "#666666";
-                    else if (l.properties.type == "fiber")
+                    else if (colType == "fiber")
                         typeColor = "#001aff";
-                    else if (l.properties.type == "vpn")
+                    else if (colType == "vpn")
                         typeColor = "#ff00c8";
                     else
                         typeColor = "#666666";
@@ -441,7 +454,8 @@
                                      var baseClass = "njg-link",
                                          addClass = null,
                                          value = link.properties && link.properties[opts.linkClassProperty],
-                                         typeClass = (link.properties && link.properties.hasOwnProperty("type")) ? link.properties["type"] : "";
+                                         typeClass = (link.properties && link.properties.hasOwnProperty("type")) ? link.properties["type"] : (link.properties && link.properties.hasOwnProperty("properties") && link.properties["properties"].hasOwnProperty("type")) ? link.properties["properties"]["type"] : "";
+                                         //typeClass = (link.properties && link.properties.hasOwnProperty("properties") && link.properties["properties"].hasOwnProperty("type")) ? link.properties["properties"]["type"] : "";
                                      if (opts.linkClassProperty && value) {
                                          // if value is stirng use that as class
                                          if (typeof(value) === "string") {
