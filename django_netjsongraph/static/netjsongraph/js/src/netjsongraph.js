@@ -485,13 +485,20 @@
                                          value = node.properties && node.properties[opts.nodeClassProperty],
                                          typeClass = "";
                                      if (node.properties) {
+                                        if (node.properties.hasOwnProperty("gateway"))
+                                            typeClass = node.properties["gateway"] ? "gateway" : "";
                                         if (node.properties.hasOwnProperty("style"))
                                             typeClass = node.properties["style"];
-                                        else if (node.properties.hasOwnProperty("gateway"))
-                                            typeClass = node.properties["gateway"] ? "gateway" : "";
-                                        else if (node.properties.hasOwnProperty("properties"))
+                                        if (node.properties.hasOwnProperty("type"))
+                                            if (node.properties["type"] == "cutpoint_gateway")
+                                                typeClass = "cutpoint_gateway";
+                                        if (node.properties.hasOwnProperty("properties")) {
                                             if (node.properties["properties"].hasOwnProperty("gateway"))
                                                 typeClass = node.properties["properties"]["gateway"] ? "gateway" : "";
+                                            if (node.properties["properties"].hasOwnProperty("type"))
+                                                if (node.properties["properties"]["type"] == "cutpoint_gateway")
+                                                    typeClass = "cutpoint_gateway";
+                                        }
                                      }
                                          
                                      if (opts.nodeClassProperty && value) {
