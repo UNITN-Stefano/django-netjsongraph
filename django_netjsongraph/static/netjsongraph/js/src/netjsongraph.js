@@ -486,7 +486,7 @@
                                          typeClass = "";
                                      if (node.properties) {
                                         if (node.properties.hasOwnProperty("gateway"))
-                                            typeClass = node.properties["gateway"] ? "gateway" : "";
+                                            typeClass = node.properties["gateway"] == "true" ? "gateway" : "";
                                         if (node.properties.hasOwnProperty("style"))
                                             typeClass = node.properties["style"];
                                         if (node.properties.hasOwnProperty("type"))
@@ -494,7 +494,7 @@
                                                 typeClass = "cutpoint_gateway";
                                         if (node.properties.hasOwnProperty("properties")) {
                                             if (node.properties["properties"].hasOwnProperty("gateway"))
-                                                typeClass = node.properties["properties"]["gateway"] ? "gateway" : "";
+                                                typeClass = node.properties["properties"]["gateway"] == "true" ? "gateway" : "";
                                             if (node.properties["properties"].hasOwnProperty("type"))
                                                 if (node.properties["properties"]["type"] == "cutpoint_gateway")
                                                     typeClass = "cutpoint_gateway";
