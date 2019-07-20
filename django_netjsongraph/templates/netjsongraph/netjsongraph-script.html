@@ -7,19 +7,19 @@
     .njg-link.ethernet{ stroke: #0481db; stroke-opacity: 0.7 }
     .njg-link.fiber{ stroke: #001aff; stroke-opacity: 0.7 }
     .njg-link.vpn{ stroke: #ff00c8; stroke-opacity: 0.7 }
-    .njg-node{ fill: #3182bd }
-    .njg-node.cutpoint_0{ fill: gold !important; }
-    .njg-node.cutpoint_1{ fill: orange !important; }
-    .njg-node.cutpoint_2{ fill: darkorange !important; }
-    .njg-node.cutpoint_3{ fill: coral !important; }
-    .njg-node.cutpoint_4{ fill: tomato !important; }
-    .njg-node.cutpoint_5{ fill: orangered !important; }
-    .njg-node.cutpoint_6{ fill: red !important; }
-    .njg-node.cutpoint_7{ fill: red !important; }
-    .njg-node.cutpoint_8{ fill: red !important; }
-    .njg-node.cutpoint_9{ fill: red !important; }
-    .njg-node.cutpoint_gateway{ fill: #ff00c8 !important; }
-    .njg-node.gateway{ fill: #00ec14 }
+    .njg-node{ fill: #3182bd; stroke: #3182bd; stroke-width: 5px; fill-opacity: 0.95}
+    .njg-node.cutpoint_0{ fill: gold !important; stroke: gold; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_1{ fill: orange !important; stroke: orange; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_2{ fill: darkorange !important; stroke: darkorange; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_3{ fill: coral !important; stroke: coral; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_4{ fill: tomato !important; stroke: tomato; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_5{ fill: orangered !important; stroke: orangered; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_6{ fill: red !important; stroke: red; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_7{ fill: red !important; stroke: red; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_8{ fill: red !important; stroke: red; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_9{ fill: red !important; stroke: red; stroke-width: 5px; fill-opacity: 0.95 }
+    .njg-node.cutpoint_gateway{ fill: #ff00c8 !important; stroke:#ff00c8; stroke-width: 5px; fill-opacity: 0.95}
+    .njg-node.gateway{ fill: #00ec14; stroke: #00ec14; stroke-width: 5px; fill-opacity: 0.95}
     .njg-link{ stroke-width: 5px }
     .njg-link:hover,.njg-link.njg-open{
         stroke-width: 6px !important;
@@ -94,6 +94,9 @@
             circleRadius: function(node){ 
                 if (node.properties) {
                     if (node.properties["radius"]) {
+                        if (node.properties["nodes in block"])
+                            if (node.properties.radius > 5)
+                                return node.properties.radius / 2;
                         return node.properties.radius;
                     } 
                 }
